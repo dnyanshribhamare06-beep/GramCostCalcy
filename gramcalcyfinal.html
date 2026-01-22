@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Gram Price Calculator</title>
+
+<style>
+:root{
+    --bg:#ffffff;
+    --text:#222;
+    --card:#f2fbfa;
+    --primary:#20bf6b;
+    --accent:#f7b731;
+}
+
+body{
+    margin:0;
+    font-family:system-ui, Arial;
+    background:linear-gradient(#20bf6b,#0fb9b1);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.container{
+    width:100%;
+    max-width:420px;
+    background:var(--bg);
+    color:var(--text);
+    border-radius:20px;
+    padding:20px;
+    overflow:hidden;
+}
+
+.header{
+    text-align:center;
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.tabs{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.tabs button{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    background:#ddd;
+    font-weight:600;
+}
+
+.tabs button.active{
+    background:var(--primary);
+    color:#fff;
+}
+
+label{
+    display:block;
+    margin-top:12px;
+    font-weight:600;
+}
+
+.input-group{
+    display:flex;
+    align-items:center;
+    border:1px solid #aaa;
+    border-radius:12px;
+    overflow:hidden;
+    margin-top:6px;
+    background:#fff;
+}
+
+.input-group input{
+    flex:1;
+    padding:14px;
+    border:none;
+    outline:none;
+    font-size:16px;
+    min-width:0;
+}
+
+.input-group input::placeholder{
+    color:#aaa;
+}
+
+.unit{
+    width:45px;
+    text-align:center;
+    font-weight:700;
+    color:#555;
+    background:#f1f1f1;
+}
+
+.calc{
+    width:100%;
+    margin-top:18px;
+    padding:14px;
+    border:none;
+    border-radius:14px;
+    background:var(--primary);
+    color:#fff;
+    font-size:16px;
+    font-weight:700;
+}
+
+.result{
+    margin-top:15px;
+    padding:14px;
+    background:var(--card);
+    border-radius:12px;
+    text-align:center;
+    font-size:16px;
+    font-weight:700;
+}
+
+.calculator{display:none;}
+.calculator.active{display:block;}
+
+.footer{
+    text-align:center;
+    margin-top:18px;
+    font-size:12px;
+    color:#999;
+    opacity:0.6;
+    letter-spacing:1px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        Gram & Price Calculator<br>
+        ग्राम और क़ीमत कैलकुलेटर
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="showCalc('price')">Price / क़ीमत</button>
+        <button class="tab" onclick="showCalc('gram')">Gram / ग्राम</button>
+    </div>
+
+    <!-- PRICE -->
+    <div class="calculator active" id="priceCalc">
+        <label>Original Gram / मूल ग्राम</label>
+        <div class="input-group">
+            <input type="number" id="p_gram" placeholder="1000">
+            <div class="unit">gm</div>
+        </div>
+
+        <label>Original Price / मूल क़ीमत</label>
+        <div class="input-group">
+            <input type="number" id="p_price" placeholder="100">
+            <div class="unit">₹</div>
+        </div>
+
+        <label>Enter Price / क़ीमत डालें</label>
+        <div class="input-group">
+            <input type="number" id="new_price" placeholder="20">
+            <div class="unit">₹</div>
+        </div>
+
+        <button class="calc" onclick="calculateGram()">Calculate Gram</button>
+        <div class="result" id="priceResult">👉 निकला हुआ ग्राम यहाँ दिखेगा</div>
+    </div>
+
+    <!-- GRAM -->
+    <div class="calculator" id="gramCalc">
+        <label>Original Gram / मूल ग्राम</label>
+        <div class="input-group">
+            <input type="number" id="g_gram" placeholder="1000">
+            <div class="unit">gm</div>
+        </div>
+
+        <label>Original Price / मूल क़ीमत</label>
+        <div class="input-group">
+            <input type="number" id="g_price" placeholder="100">
+            <div class="unit">₹</div>
+        </div>
+
+        <label>Enter Gram / ग्राम डालें</label>
+        <div class="input-group">
+            <input type="number" id="new_gram" placeholder="200">
+            <div class="unit">gm</div>
+        </div>
+
+        <button class="calc" onclick="calculatePrice()">Calculate Price</button>
+        <div class="result" id="gramResult">👉 निकली हुई क़ीमत यहाँ दिखेगी</div>
+    </div>
+
+    <!-- WATERMARK -->
+    <div class="footer">D’shree</div>
+
+</div>
+
+<script>
+function showCalc(t){
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.calculator').forEach(c=>c.classList.remove('active'));
+    if(t==='price'){document.querySelectorAll('.tab')[0].classList.add('active');priceCalc.classList.add('active')}
+    else{document.querySelectorAll('.tab')[1].classList.add('active');gramCalc.classList.add('active')}
+}
+
+function calculateGram(){
+    let g=+p_gram.value,p=+p_price.value,np=+new_price.value;
+    if(!g||!p||!np){priceResult.innerHTML="❌ सभी मान भरें";return;}
+    priceResult.innerHTML="✅ ग्राम: "+((np*g)/p).toFixed(2)+" gm";
+}
+
+function calculatePrice(){
+    let g=+g_gram.value,p=+g_price.value,ng=+new_gram.value;
+    if(!g||!p||!ng){gramResult.innerHTML="❌ सभी मान भरें";return;}
+    gramResult.innerHTML="✅ क़ीमत: ₹ "+((ng*p)/g).toFixed(2);
+}
+</script>
+
+</body>
+</html>
